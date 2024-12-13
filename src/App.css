@@ -1,0 +1,27 @@
+/* Styling for Masonry Grid */
+.masonry-grid {
+    display: flex;
+    margin-left: -30px; /* Adjust gap size */
+    width: auto;
+  }
+  
+  .masonry-grid-column {
+    padding-left: 30px; /* Adjust gap size */
+    background-clip: padding-box;
+  }
+  
+  .masonry-grid > div > img {
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 8px;
+  }
+  
+  /* Optional: Customize heading */
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
