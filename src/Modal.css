@@ -1,0 +1,88 @@
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    position: relative;
+    max-width: 80%;
+    max-height: 80%;
+    overflow: hidden;
+  }
+  
+  .modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    color: #333;
+    cursor: pointer;
+  }
+  
+  /* Modal Image */
+  .modal-image {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+  }
+  
+  /* Zoom effect */
+  .image-container.zoomed .modal-image {
+    transform: scale(1.5);
+  }
+  
+/* Modal.css */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    position: relative;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: hidden;
+  }
+  
+  .modal-image {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+  }
+  
+  .modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  

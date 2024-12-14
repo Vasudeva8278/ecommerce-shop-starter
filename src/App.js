@@ -1,27 +1,30 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Masonry from 'react-masonry-css';
-import './App.css'; // Optional: Add custom styles here
-
+import { FaSearch } from 'react-icons/fa';
+import './App.css'; // Custom styles
+import ImageWithDescription from './components/ImageWithDescription';
+import NoGapImage from './components/NoGapImage';
+import ImageWithTitle from './components/ImageWithTitle';
+import Modal from './Modal';
 const App = () => {
   const [masonryData, setMasonryData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null); // State for modal image
 
-  // Fetch initial data
+  // Fetch data from API
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/masonry/'); // Replace with your API endpoint
+      const response = await fetch('http://localhost:5000/api/masonry/');
       const data = await response.json();
-      setMasonryData((prevData) => [...prevData, ...data.masonries]); // Append data to create looping effect
+      setMasonryData((prevData) => [...prevData, ...data.masonries]);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }, []);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  // Infinite scrolling logic
+  // Infinite scroll logic
   const handleScroll = () => {
     if (
       window.innerHeight + document.documentElement.scrollTop >=
@@ -36,41 +39,70 @@ const App = () => {
   };
 
   useEffect(() => {
+    fetchData();
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [fetchData]);
 
-  // Breakpoints for masonry layout
+  // Filter data by search term
+  const filteredData = masonryData.filter((item) =>
+    item.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Define breakpoints for masonry layout
   const breakpointColumnsObj = {
-    default: 4, // Default column count
-    1100: 3,    // 3 columns for screen widths <= 1100px
-    700: 2,     // 2 columns for screen widths <= 700px
-    500: 1      // 1 column for screen widths <= 500px
+    default: 4,
+    1100: 3,
+    700: 2,
+    500: 1,
+  };
+
+  const openModal = (image) => {
+    setSelectedImage(image); // Set the clicked image to the modal
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null); // Close the modal
   };
 
   return (
-    <div>
-      <h1>Infinite Scrolling Photo Gallery</h1>
-      <Masonry
-        breakpointCols={breakpointColumnsObj}
-        className="masonry-grid"
-        columnClassName="masonry-grid-column"
-      >
-        {masonryData.map((item, index) => (
-          <div key={index} style={{ marginBottom: '20px' }}>
-            <img
-              src={item.photoUrl}
-              alt={item.title}
-              style={{ width: '100%', borderRadius: '8px' }}
+    <Router>
+      <div>
+        {/* Navbar */}
+        <nav className="navbar">
+          <ul>
+            <li><Link to="/image-with-title">Image with Title</Link></li>
+            <li><Link to="/no-gap-image">No Gap Image</Link></li>
+            <li><Link to="/image-with-description">Image with Description</Link></li>
+          </ul>
+          <div className="search-box">
+            <FaSearch size={20} />
+            <input
+              type="text"
+              placeholder="Search by title..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <h3 style={{ textAlign: 'center', marginTop: '10px' }}>{item.title}</h3>
           </div>
-        ))}
-      </Masonry>
-      {loading && <div style={{ textAlign: 'center', margin: '20px' }}>Loading...</div>}
-    </div>
+        </nav>
+
+        {/* Routes for each component */}
+        <Routes>
+          <Route path="/image-with-title" element={<ImageWithTitle data={filteredData} breakpointCols={breakpointColumnsObj} openModal={openModal} />} />
+          <Route path="/no-gap-image" element={<NoGapImage data={filteredData} breakpointCols={breakpointColumnsObj} openModal={openModal} />} />
+          <Route path="/image-with-description" element={<ImageWithDescription data={filteredData} breakpointCols={breakpointColumnsObj} openModal={openModal} />} />
+          <Route path="/" element={<div>Welcome to the gallery!</div>} />
+        </Routes>
+
+        {/* Loading Indicator */}
+        {loading && <div style={{ textAlign: 'center', margin: '20px' }}>Loading...</div>}
+
+        {/* Modal to display clicked image */}
+        {selectedImage && <Modal image={selectedImage} closeModal={closeModal} />}
+      </div>
+    </Router>
   );
 };
 
