@@ -4,7 +4,7 @@ import Masonry from 'react-masonry-css';
 const ImageWithTitle = ({ data, breakpointCols, openModal }) => {
   return (
     <div>
-      <h2>Images with Title</h2>
+   
       <Masonry
         breakpointCols={breakpointCols}
         className="masonry-grid"
